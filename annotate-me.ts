@@ -20,9 +20,17 @@ import fs from 'fs/promises'
 
 // These types are not correctly constructed. It is up to you to figure out what
 // to put in.
-type UnsanitizedNumber = {}
-type SanitizedNumber = {}
-type InvalidNumber = {}
+type UnsanitizedNumber = {
+  kind: 'unsanitized-number',
+  value: number,
+}
+type SanitizedNumber = {
+  kind: 'sanitized-number',
+  value: number,
+}
+type InvalidNumber = {
+  kind: 'invalid-number',
+}
 
 // This type is valid though. A freebie!
 type AppNumber =
@@ -34,7 +42,7 @@ type AppNumber =
  * Takes a string and converts it to a number. This is the first stage of
  * providing our valid data.
  */
-const unsanitizedNumber = (input) => {
+const unsanitizedNumber = (input: string): UnsanitizedNumber | null => {
   const num = parseInt(input)
   if(isNaN(num)) {
     return null
@@ -52,7 +60,7 @@ const unsanitizedNumber = (input) => {
  * More practical applications of this could be making sure an email input by a
  * user is indeed formatted as an email.
  */
-const sanitizedNumber = (input) => {
+const sanitizedNumber = (input: UnsanitizedNumber | null): SanitizedNumber | null => {
   if(input == null) {
     // If null, just pass the error along.
     return null
@@ -60,7 +68,7 @@ const sanitizedNumber = (input) => {
     if(input.value > 0 && input.value <= 10) {
       return {
         kind: 'sanitized-number',
-        value: input,
+        value: input.value,
       }
     } else {
       return null
@@ -72,7 +80,7 @@ const sanitizedNumber = (input) => {
 // Note this function does not return anything. How to annotate it?
 // We also don't particularly care what is passed in. How do we annotate a
 // parameter whose shape we care nothing about?
-function showError(x) {
+function showError(x: any): void {
   console.error(`${x} is not what I asked for.`)
 }
 
@@ -81,7 +89,7 @@ function showError(x) {
   console.log('Give me a number between 1 and 10:')
   // Our final number doesn't exist yet. Must be set to an invalid state so
   // nothing can fall through.
-  let finalNumber = {
+  let finalNumber: AppNumber = {
     kind: 'invalid-number',
   }
   // This is a "do-while" loop. First the body (everything between the curly
@@ -92,11 +100,11 @@ function showError(x) {
   // do-while loops are good for "do something once, then check to see if I need
   // to keep doing it".
   do {
-    const input = await fs.readFile('/dev/stdin', 'utf8')
+    const input: string = await fs.readFile('/dev/stdin', 'utf8')
     // Normally we wouldn't call these numStep1 and numStep2, but this is to
     // help guide through the flow of the program.
-    const numStep1 = unsanitizedNumber(input)
-    const numStep2 = sanitizedNumber(numStep1)
+    const numStep1: UnsanitizedNumber | null = unsanitizedNumber(input)
+    const numStep2: SanitizedNumber | null = sanitizedNumber(numStep1)
     if(numStep2 != null) {
       finalNumber = numStep2
     } else {
