@@ -1,0 +1,15 @@
+{
+  "name": "adv-fullstack-typescript-template",
+  "version": "1.0.0",
+  "description": "Template for TypeScript assignment.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "18.11.4",
+    "typescript": "4.8.4"
+  }
+}
