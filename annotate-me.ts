@@ -28,7 +28,9 @@ type SanitizedNumber = {
   kind: 'sanitized-number',
   value: number,
 }
-type InvalidNumber = {}
+type InvalidNumber = {
+  kind: 'invalid-number',
+}
 
 // This type is valid though. A freebie!
 type AppNumber =
@@ -78,7 +80,7 @@ const sanitizedNumber = (input: UnsanitizedNumber | null): SanitizedNumber | nul
 // Note this function does not return anything. How to annotate it?
 // We also don't particularly care what is passed in. How do we annotate a
 // parameter whose shape we care nothing about?
-function showError(x) {
+function showError(x: any) {
   console.error(`${x} is not what I asked for.`)
 }
 
@@ -87,7 +89,7 @@ function showError(x) {
   console.log('Give me a number between 1 and 10:')
   // Our final number doesn't exist yet. Must be set to an invalid state so
   // nothing can fall through.
-  let finalNumber = {
+  let finalNumber: InvalidNumber = {
     kind: 'invalid-number',
   }
   // This is a "do-while" loop. First the body (everything between the curly
