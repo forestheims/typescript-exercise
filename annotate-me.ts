@@ -100,11 +100,11 @@ function showError(x: any): void {
   // do-while loops are good for "do something once, then check to see if I need
   // to keep doing it".
   do {
-    const input = await fs.readFile('/dev/stdin', 'utf8')
+    const input: string = await fs.readFile('/dev/stdin', 'utf8')
     // Normally we wouldn't call these numStep1 and numStep2, but this is to
     // help guide through the flow of the program.
-    const numStep1 = unsanitizedNumber(input)
-    const numStep2 = sanitizedNumber(numStep1)
+    const numStep1: UnsanitizedNumber | null = unsanitizedNumber(input)
+    const numStep2: SanitizedNumber | null = sanitizedNumber(numStep1)
     if(numStep2 != null) {
       finalNumber = numStep2
     } else {
